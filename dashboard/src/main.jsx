@@ -1,10 +1,16 @@
-import React, { createContext, useState } from "react";
-import ReactDOM from "react-dom/client";
-import App from "./App.jsx";
-import "./index.css";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+// Styles
+import './index.css';
+import 'react-toastify/dist/ReactToastify.css';
 
+// React and Dependencies
+import React, { createContext, useState } from 'react';
+import ReactDOM from 'react-dom/client';
+import { ToastContainer } from 'react-toastify';
+
+// Components
+import App from './App.jsx';
+
+// Context
 export const Context = createContext({ isAuthenticated: false });
 
 const AppWrapper = () => {
@@ -37,7 +43,7 @@ const AppWrapper = () => {
   );
 };
 
-ReactDOM.createRoot(document.getElementById("root")).render(
+ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <AppWrapper />
   </React.StrictMode>

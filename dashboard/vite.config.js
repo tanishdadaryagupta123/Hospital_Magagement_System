@@ -10,9 +10,20 @@ export default defineConfig({
     host: true
   },
   resolve: {
-    extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    extensions: ['.js', '.jsx', '.ts', '.tsx', '.css'],
     alias: {
       '@': resolve(__dirname, 'src')
+    }
+  },
+  css: {
+    modules: {
+      localsConvention: 'camelCase',
+      scopeBehaviour: 'local'
+    },
+    preprocessorOptions: {
+      less: {
+        javascriptEnabled: true
+      }
     }
   },
   build: {
@@ -32,6 +43,8 @@ export default defineConfig({
           let extType = assetInfo.name.split('.').at(1);
           if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(extType)) {
             extType = 'img';
+          } else if (/css/i.test(extType)) {
+            extType = 'css';
           }
           return `assets/${extType}/[name]-[hash][extname]`;
         },
