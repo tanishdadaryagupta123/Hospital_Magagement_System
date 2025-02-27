@@ -19,9 +19,16 @@ export default defineConfig({
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
-          utils: ['axios', 'react-router-dom']
+          utils: ['axios', 'react-router-dom', 'react-icons']
         }
       }
+    },
+    commonjsOptions: {
+      include: [/node_modules/],
+      transformMixedEsModules: true
     }
+  },
+  optimizeDeps: {
+    include: ['react-icons']
   }
 })
