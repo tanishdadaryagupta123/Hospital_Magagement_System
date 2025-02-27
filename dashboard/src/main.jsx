@@ -1,6 +1,9 @@
 import React, { createContext, useState } from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
+import "./index.css";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const Context = createContext({ isAuthenticated: false });
 
@@ -10,9 +13,26 @@ const AppWrapper = () => {
 
   return (
     <Context.Provider
-      value={{ isAuthenticated, setIsAuthenticated, admin, setAdmin }}
+      value={{
+        isAuthenticated,
+        setIsAuthenticated,
+        admin,
+        setAdmin,
+      }}
     >
       <App />
+      <ToastContainer
+        position="bottom-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </Context.Provider>
   );
 };
