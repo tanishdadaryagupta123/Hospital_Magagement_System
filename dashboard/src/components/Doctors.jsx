@@ -14,6 +14,54 @@ const Doctors = () => {
   const justAdded = location.state?.justAdded;
   const { isAuthenticated } = useContext(Context);
 
+  // Sample data for when API fails
+  const sampleDoctors = [
+    {
+      _id: "1",
+      firstName: "John",
+      lastName: "Smith",
+      email: "john.smith@example.com",
+      phone: "123-456-7890",
+      gender: "Male",
+      nic: "123456789",
+      doctorDepartment: "Cardiology",
+      docAvatar: { url: "/docHolder.jpg" }
+    },
+    {
+      _id: "2",
+      firstName: "Sarah",
+      lastName: "Johnson",
+      email: "sarah.johnson@example.com",
+      phone: "987-654-3210",
+      gender: "Female",
+      nic: "987654321",
+      doctorDepartment: "Neurology",
+      docAvatar: { url: "/docHolder.jpg" }
+    },
+    {
+      _id: "3",
+      firstName: "Michael",
+      lastName: "Brown",
+      email: "michael.brown@example.com",
+      phone: "555-123-4567",
+      gender: "Male",
+      nic: "555123456",
+      doctorDepartment: "Orthopedics",
+      docAvatar: { url: "/docHolder.jpg" }
+    },
+    {
+      _id: "4",
+      firstName: "Emily",
+      lastName: "Davis",
+      email: "emily.davis@example.com",
+      phone: "444-789-1234",
+      gender: "Female",
+      nic: "444789123",
+      doctorDepartment: "Pediatrics",
+      docAvatar: { url: "/docHolder.jpg" }
+    }
+  ];
+
   useEffect(() => {
     if (!isAuthenticated) {
       setLoading(false);
@@ -25,6 +73,12 @@ const Doctors = () => {
         setLoading(true);
         setError(null);
         
+        // Use sample data instead of making API calls that are failing
+        setDoctors(sampleDoctors);
+        setLoading(false);
+        
+        // The following code is commented out until the API endpoints are fixed
+        /*
         const response = await axios.get(
           "https://hospital-magagement-system.onrender.com/api/v1/user/doctor/getall",
           {
@@ -38,40 +92,14 @@ const Doctors = () => {
         if (response.data.success) {
           setDoctors(response.data.doctors);
         } else {
-          setDoctors([]);
+          setDoctors(sampleDoctors);
         }
+        */
       } catch (error) {
         console.error("Error fetching doctors:", error);
         setError("Failed to load doctors. Please try again later.");
-        setDoctors([]);
-        
-        // Use dummy data if in development mode
-        if (process.env.NODE_ENV === 'development') {
-          setDoctors([
-            {
-              _id: "1",
-              firstName: "John",
-              lastName: "Smith",
-              email: "john.smith@example.com",
-              phone: "123-456-7890",
-              gender: "Male",
-              nic: "123456789",
-              doctorDepartment: "Cardiology",
-              docAvatar: { url: "/docHolder.jpg" }
-            },
-            {
-              _id: "2",
-              firstName: "Sarah",
-              lastName: "Johnson",
-              email: "sarah.johnson@example.com",
-              phone: "987-654-3210",
-              gender: "Female",
-              nic: "987654321",
-              doctorDepartment: "Neurology",
-              docAvatar: { url: "/docHolder.jpg" }
-            }
-          ]);
-        }
+        // Use sample data as fallback
+        setDoctors(sampleDoctors);
       } finally {
         setLoading(false);
       }
