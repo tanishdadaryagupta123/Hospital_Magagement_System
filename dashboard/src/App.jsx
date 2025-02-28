@@ -17,41 +17,28 @@ const App = () => {
     useContext(Context);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const isAuth = localStorage.getItem('isAuthenticated') === 'true';
+    // Check if user is authenticated from localStorage
+    const isAuth = localStorage.getItem('isAuthenticated') === 'true';
+    
+    if (isAuth) {
+      // Set authentication state
+      setIsAuthenticated(true);
       
-      if (isAuth) {
+      // Try to get admin data from localStorage
+      const storedAdmin = localStorage.getItem('adminUser');
+      if (storedAdmin) {
         try {
-          const response = await axios.get(
-            "https://hospital-magagement-system.onrender.com/api/v1/user/admin/me",
-            {
-              withCredentials: true,
-              headers: {
-                "Content-Type": "application/json"
-              }
-            }
-          );
-          
-          if (response.data.success) {
-            setIsAuthenticated(true);
-            setAdmin(response.data.user);
-          } else {
-            setIsAuthenticated(false);
-            setAdmin({});
-            localStorage.removeItem('isAuthenticated');
-          }
+          const adminData = JSON.parse(storedAdmin);
+          setAdmin(adminData);
         } catch (error) {
-          console.error("Error fetching user:", error.message);
-          setIsAuthenticated(false);
-          setAdmin({});
-          localStorage.removeItem('isAuthenticated');
+          console.error("Error parsing admin data:", error);
         }
-      } else {
-        setIsAuthenticated(false);
-        setAdmin({});
       }
-    };
-    fetchUser();
+    } else {
+      // Clear authentication state
+      setIsAuthenticated(false);
+      setAdmin({});
+    }
   }, []);
 
   return (

@@ -14,20 +14,22 @@ import { useNavigate } from "react-router-dom";
 const Sidebar = () => {
   const [show, setShow] = useState(false);
 
-  const { isAuthenticated, setIsAuthenticated } = useContext(Context);
+  const { isAuthenticated, setIsAuthenticated, setAdmin } = useContext(Context);
 
-  const handleLogout = async () => {
-    await axios
-      .get("https://hospital-magagement-system.onrender.com/api/v1/user/admin/logout", {
-        withCredentials: true,
-      })
-      .then((res) => {
-        toast.success(res.data.message);
-        setIsAuthenticated(false);
-      })
-      .catch((err) => {
-        toast.error(err.response.data.message);
-      });
+  const handleLogout = () => {
+    // Clear localStorage
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('adminUser');
+    
+    // Update context
+    setIsAuthenticated(false);
+    setAdmin({});
+    
+    // Show success message
+    toast.success("Logged out successfully");
+    
+    // Redirect to login page
+    navigateTo("/login");
   };
 
   const navigateTo = useNavigate();
@@ -53,26 +55,43 @@ const Sidebar = () => {
     setShow(!show);
   };
 
+  if (!isAuthenticated) return null;
+
   return (
     <>
-      <nav
-        style={!isAuthenticated ? { display: "none" } : { display: "flex" }}
-        className={show ? "show sidebar" : "sidebar"}
-      >
-        <div className="links">
-          <TiHome onClick={gotoHomePage} />
-          <FaUserDoctor onClick={gotoDoctorsPage} />
-          <MdAddModerator onClick={gotoAddNewAdmin} />
-          <IoPersonAddSharp onClick={gotoAddNewDoctor} />
-          <AiFillMessage onClick={gotoMessagesPage} />
-          <RiLogoutBoxFill onClick={handleLogout} />
+      <div className={show ? "sidebar show-sidebar" : "sidebar"}>
+        <div className="hamburger" onClick={() => setShow(!show)}>
+          <GiHamburgerMenu />
         </div>
-      </nav>
-      <div
-        className="wrapper"
-        style={!isAuthenticated ? { display: "none" } : { display: "flex" }}
-      >
-        <GiHamburgerMenu className="hamburger" onClick={() => setShow(!show)} />
+        <div className="logo">
+          <img src="/logo.png" alt="logo" className="logo-img" />
+        </div>
+        <div className="sidebar-links">
+          <div className="sidebar-link" onClick={gotoHomePage}>
+            <TiHome />
+            <span>Dashboard</span>
+          </div>
+          <div className="sidebar-link" onClick={gotoDoctorsPage}>
+            <FaUserDoctor />
+            <span>Doctors</span>
+          </div>
+          <div className="sidebar-link" onClick={gotoMessagesPage}>
+            <AiFillMessage />
+            <span>Messages</span>
+          </div>
+          <div className="sidebar-link" onClick={gotoAddNewDoctor}>
+            <IoPersonAddSharp />
+            <span>Add New Doctor</span>
+          </div>
+          <div className="sidebar-link" onClick={gotoAddNewAdmin}>
+            <MdAddModerator />
+            <span>Add New Admin</span>
+          </div>
+          <div className="sidebar-link" onClick={handleLogout}>
+            <RiLogoutBoxFill />
+            <span>Logout</span>
+          </div>
+        </div>
       </div>
     </>
   );
