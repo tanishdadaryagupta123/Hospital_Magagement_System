@@ -7,7 +7,6 @@ import Messages from "./components/Messages";
 import Doctors from "./components/Doctors";
 import { Context } from "./main";
 import axios from "axios";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Sidebar from "./components/Sidebar";
 import AddNewAdmin from "./components/AddNewAdmin";
@@ -66,7 +65,6 @@ const App = () => {
         <Route path="/messages" element={<Messages />} />
         <Route path="/doctors" element={<Doctors />} />
       </Routes>
-      <ToastContainer position="top-center" />
     </Router>
   );
 };
