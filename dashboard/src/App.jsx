@@ -19,22 +19,41 @@ const App = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      try {
-        const response = await axios.get(
-          "https://hospital-magagement-system.onrender.com/api/v1/user/admin/me",
-          {
-            withCredentials: true,
+      const isAuth = localStorage.getItem('isAuthenticated') === 'true';
+      
+      if (isAuth) {
+        try {
+          const response = await axios.get(
+            "https://hospital-magagement-system.onrender.com/api/v1/user/admin/me",
+            {
+              withCredentials: true,
+              headers: {
+                "Content-Type": "application/json"
+              }
+            }
+          );
+          
+          if (response.data.success) {
+            setIsAuthenticated(true);
+            setAdmin(response.data.user);
+          } else {
+            setIsAuthenticated(false);
+            setAdmin({});
+            localStorage.removeItem('isAuthenticated');
           }
-        );
-        setIsAuthenticated(true);
-        setAdmin(response.data.user);
-      } catch (error) {
+        } catch (error) {
+          console.error("Error fetching user:", error.message);
+          setIsAuthenticated(false);
+          setAdmin({});
+          localStorage.removeItem('isAuthenticated');
+        }
+      } else {
         setIsAuthenticated(false);
         setAdmin({});
       }
     };
     fetchUser();
-  }, [isAuthenticated]);
+  }, []);
 
   return (
     <Router>

@@ -30,6 +30,7 @@ const Login = () => {
       if (response && response.data) {
         toast.success(response.data.message);
         setIsAuthenticated(true);
+        localStorage.setItem('isAuthenticated', 'true');
         navigateTo("/");
         setEmail("");
         setPassword("");
@@ -38,6 +39,8 @@ const Login = () => {
     } catch (error) {
       const errorMessage = error.response?.data?.message || "Login failed. Please try again.";
       toast.error(errorMessage);
+      localStorage.removeItem('isAuthenticated');
+      setIsAuthenticated(false);
     }
   };
 

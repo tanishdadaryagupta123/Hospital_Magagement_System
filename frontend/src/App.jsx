@@ -22,7 +22,7 @@ const App = () => {
       if (isAuth) {
         try {
           const response = await axios.get(
-            "https://hospital-magagement-system.onrender.com/api/v1/user/patient/me",
+            "http://localhost:3000/api/v1/user/patient/me",
             {
               withCredentials: true,
               headers: {
@@ -62,18 +62,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
         </Routes>
         <Footer />
-        <ToastContainer
-          position="top-center"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="colored"
-        />
+        <ToastContainer position="top-center" />
       </Router>
     </>
   );
