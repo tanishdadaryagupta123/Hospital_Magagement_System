@@ -7,7 +7,13 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5174,
-    host: true
+    host: true,
+    fs: {
+      strict: true,
+    },
+    headers: {
+      'Content-Type': 'application/javascript',
+    },
   },
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.css'],
