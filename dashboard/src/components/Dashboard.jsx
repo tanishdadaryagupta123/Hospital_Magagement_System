@@ -8,28 +8,50 @@ import { AiFillCloseCircle } from "react-icons/ai";
 
 const Dashboard = () => {
   const [appointments, setAppointments] = useState([]);
+  const { isAuthenticated, admin } = useContext(Context);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchAppointments = async () => {
+      if (!isAuthenticated) {
+        setLoading(false);
+        return;
+      }
+      
       try {
         const { data } = await axios.get(
           "https://hospital-magagement-system.onrender.com/api/v1/appointment/getall",
-          { withCredentials: true }
+          { 
+            withCredentials: true,
+            headers: {
+              "Content-Type": "application/json"
+            }
+          }
         );
         setAppointments(data.appointments);
       } catch (error) {
+        console.error("Error fetching appointments:", error);
+        const errorMessage = error.response?.data?.message || "Failed to fetch appointments";
+        toast.error(errorMessage);
         setAppointments([]);
+      } finally {
+        setLoading(false);
       }
     };
     fetchAppointments();
-  }, []);
+  }, [isAuthenticated]);
 
   const handleUpdateStatus = async (appointmentId, status) => {
     try {
       const { data } = await axios.put(
         `https://hospital-magagement-system.onrender.com/api/v1/appointment/update/${appointmentId}`,
         { status },
-        { withCredentials: true }
+        { 
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
       );
       setAppointments((prevAppointments) =>
         prevAppointments.map((appointment) =>
@@ -40,13 +62,17 @@ const Dashboard = () => {
       );
       toast.success(data.message);
     } catch (error) {
-      toast.error(error.response.data.message);
+      const errorMessage = error.response?.data?.message || "Failed to update status";
+      toast.error(errorMessage);
     }
   };
 
-  const { isAuthenticated, admin } = useContext(Context);
   if (!isAuthenticated) {
     return <Navigate to={"/login"} />;
+  }
+
+  if (loading) {
+    return <div>Loading...</div>;
   }
 
   return (
@@ -72,7 +98,7 @@ const Dashboard = () => {
           </div>
           <div className="secondBox">
             <p>Total Appointments</p>
-            <h3>1500</h3>
+            <h3>{appointments.length}</h3>
           </div>
           <div className="thirdBox">
             <p>Registered Doctors</p>
@@ -93,46 +119,50 @@ const Dashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {appointments && appointments.length > 0
-                ? appointments.map((appointment) => (
-                    <tr key={appointment._id}>
-                      <td>{`${appointment.firstName} ${appointment.lastName}`}</td>
-                      <td>{appointment.appointment_date.substring(0, 16)}</td>
-                      <td>{`${appointment.doctor.firstName} ${appointment.doctor.lastName}`}</td>
-                      <td>{appointment.department}</td>
-                      <td>
-                        <select
-                          className={
-                            appointment.status === "Pending"
-                              ? "value-pending"
-                              : appointment.status === "Accepted"
-                              ? "value-accepted"
-                              : "value-rejected"
-                          }
-                          value={appointment.status}
-                          onChange={(e) =>
-                            handleUpdateStatus(appointment._id, e.target.value)
-                          }
-                        >
-                          <option value="Pending" className="value-pending">
-                            Pending
-                          </option>
-                          <option value="Accepted" className="value-accepted">
-                            Accepted
-                          </option>
-                          <option value="Rejected" className="value-rejected">
-                            Rejected
-                          </option>
-                        </select>
-                      </td>
-                      <td>{appointment.hasVisited === true ? <GoCheckCircleFill className="green"/> : <AiFillCloseCircle className="red"/>}</td>
-                    </tr>
-                  ))
-                : "No Appointments Found!"}
+              {appointments && appointments.length > 0 ? (
+                appointments.map((appointment) => (
+                  <tr key={appointment._id}>
+                    <td>{`${appointment.firstName} ${appointment.lastName}`}</td>
+                    <td>{appointment.appointment_date.substring(0, 16)}</td>
+                    <td>{`${appointment.doctor.firstName} ${appointment.doctor.lastName}`}</td>
+                    <td>{appointment.department}</td>
+                    <td>
+                      <select
+                        className={
+                          appointment.status === "Pending"
+                            ? "value-pending"
+                            : appointment.status === "Accepted"
+                            ? "value-accepted"
+                            : "value-rejected"
+                        }
+                        value={appointment.status}
+                        onChange={(e) =>
+                          handleUpdateStatus(appointment._id, e.target.value)
+                        }
+                      >
+                        <option value="Pending" className="value-pending">
+                          Pending
+                        </option>
+                        <option value="Accepted" className="value-accepted">
+                          Accepted
+                        </option>
+                        <option value="Rejected" className="value-rejected">
+                          Rejected
+                        </option>
+                      </select>
+                    </td>
+                    <td>{appointment.hasVisited === true ? <GoCheckCircleFill className="green"/> : <AiFillCloseCircle className="red"/>}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="6" style={{ textAlign: "center" }}>
+                    No Appointments Found!
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
-
-          {}
         </div>
       </section>
     </>
