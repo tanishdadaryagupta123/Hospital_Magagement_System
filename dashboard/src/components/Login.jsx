@@ -16,25 +16,28 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      await axios
-        .post(
-          "http://localhost:3000/api/v1/user/login",
-          { email, password, confirmPassword, role: "Admin" },
-          {
-            withCredentials: true,
-            headers: { "Content-Type": "application/json" },
-          }
-        )
-        .then((res) => {
-          toast.success(res.data.message);
-          setIsAuthenticated(true);
-          navigateTo("/");
-          setEmail("");
-          setPassword("");
-          setConfirmPassword("");
-        });
+      const response = await axios.post(
+        "http://localhost:3000/api/v1/user/login",
+        { email, password, confirmPassword, role: "Admin" },
+        {
+          withCredentials: true,
+          headers: { 
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      
+      if (response && response.data) {
+        toast.success(response.data.message);
+        setIsAuthenticated(true);
+        navigateTo("/");
+        setEmail("");
+        setPassword("");
+        setConfirmPassword("");
+      }
     } catch (error) {
-      toast.error(error.response.data.message);
+      const errorMessage = error.response?.data?.message || "Login failed. Please try again.";
+      toast.error(errorMessage);
     }
   };
 

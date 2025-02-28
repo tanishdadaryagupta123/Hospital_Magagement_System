@@ -6,12 +6,12 @@ const appointmentSchema = new mongoose.Schema({
   firstName: {
     type: String,
     required: [true, "First Name Is Required!"],
-    minLength: [3, "First Name Must Contain At Least 3 Characters!"],
+    minLength: [1, "First Name Must Contain At Least 1 Characters!"],
   },
   lastName: {
     type: String,
     required: [true, "Last Name Is Required!"],
-    minLength: [3, "Last Name Must Contain At Least 3 Characters!"],
+    minLength: [1, "Last Name Must Contain At Least 1 Characters!"],
   },
   email: {
     type: String,
@@ -21,8 +21,8 @@ const appointmentSchema = new mongoose.Schema({
   phone: {
     type: String,
     required: [true, "Phone Is Required!"],
-    minLength: [11, "Phone Number Must Contain Exact 11 Digits!"],
-    maxLength: [11, "Phone Number Must Contain Exact 11 Digits!"],
+    minLength: [10, "Phone Number Must Contain Exact 10 Digits!"],
+    maxLength: [10, "Phone Number Must Contain Exact 10 Digits!"],
   },
   nic: {
     type: String,

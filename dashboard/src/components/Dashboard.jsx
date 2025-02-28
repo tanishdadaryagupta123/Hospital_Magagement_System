@@ -63,7 +63,11 @@ const Dashboard = () => {
                     `${admin.firstName} ${admin.lastName}`}{" "}
                 </h5>
               </div>
-              
+              <p>
+                Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                Facilis, nam molestias. Eaque molestiae ipsam commodi neque.
+                Assumenda repellendus necessitatibus itaque.
+              </p>
             </div>
           </div>
           <div className="secondBox">
@@ -124,13 +128,11 @@ const Dashboard = () => {
                       <td>{appointment.hasVisited === true ? <GoCheckCircleFill className="green"/> : <AiFillCloseCircle className="red"/>}</td>
                     </tr>
                   ))
-                : (
-                    <tr>
-                      <td colSpan="3">No data available</td>
-                    </tr>
-                  )}
+                : "No Appointments Found!"}
             </tbody>
           </table>
+
+          {}
         </div>
       </section>
     </>

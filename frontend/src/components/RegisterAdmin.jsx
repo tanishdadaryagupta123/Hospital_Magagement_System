@@ -14,7 +14,7 @@ const RegisterAdmin = () => {
         };
 
         try {
-            const response = await axios.post('http://localhost:4000/api/v1/user/admin/register', newAdmin, { withCredentials: true });
+            const response = await axios.post('http://localhost:3000/api/v1/user/admin/register', newAdmin, { withCredentials: true });
             setMessage(response.data.message);
         } catch (error) {
             setMessage(error.response ? error.response.data.message : 'Registration failed');

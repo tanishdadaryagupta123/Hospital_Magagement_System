@@ -12,6 +12,7 @@ import { v2 as cloudinary } from "cloudinary";
 import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
+import cloudinaryConfig from "./config/cloudinaryConfig.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -74,13 +75,12 @@ try {
   process.exit(1);
 }
 
-// Middleware
+// CORS Configuration - Simplified for development
 app.use(cors({
-  origin: [process.env.FRONTEND_URL, process.env.DASHBOARD_URL],
-  methods: ["GET", "POST", "DELETE", "PUT"],
+  origin: true, // Allow all origins in development
   credentials: true,
-  exposedHeaders: ['Content-Length', 'X-Foo', 'X-Bar'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key', 'Accept', 'X-Requested-With']
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key', 'Accept', 'Origin']
 }));
 
 app.use(cookieParser());
@@ -115,7 +115,10 @@ app.use("/api/v1/appointment", appointmentRouter);
 // Connect to database
 dbConnection();
 
-const PORT = process.env.PORT || 4000;
+// Configure Cloudinary
+cloudinaryConfig();
+
+const PORT = process.env.PORT || 3000;
 
 // Error Middleware should be after all routes
 app.use(errorMiddleware);

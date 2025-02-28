@@ -8,28 +8,26 @@ const Biography = ({imageUrl}) => {
           <img src={imageUrl} alt="whoweare" />
         </div>
         <div className="banner">
-          <p>Biography</p>
+          <b><p>Biography</p></b>
           <h3>Who We Are</h3>
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus
-            blanditiis sequi aperiam. Debitis fugiat harum ex maxime illo
-            consequatur mollitia voluptatem omnis nihil nesciunt beatae esse
-            ipsam, sapiente totam aspernatur porro ducimus aperiam nisi. Ex
-            magnam voluptatum consectetur reprehenderit fugiat recusandae aut
-            similique illum natus velit, praesentium nostrum nesciunt. Deleniti,
-            nesciunt laboriosam totam iusto!
+          <b>Hospital Management System (HMS)</b>
+          <br></br> 
+          A Smart Healthcare Solution
+          The Hospital Management System (HMS) is a modern, full-stack web application built using the MERN stack (MongoDB, Express.js, React.js, and Node.js) to streamline hospital operations and enhance patient care. Designed with efficiency and user experience in mind, this system provides an intuitive and secure platform for managing hospital workflows, patient records, doctor appointments, billing, and more.
           </p>
           <p>We are all in 2024!</p>
           <p>We are working on a MERN STACK PROJECT.</p>
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores
-            assumenda exercitationem accusamus sit repellendus quo optio dolorum
-            corporis corrupti. Quas similique vel minima veniam tenetur
-            obcaecati atque magni suscipit laboriosam! Veniam vitae minus nihil
-            cupiditate natus provident. Ex illum quasi pariatur odit nisi
-            voluptas illo qui ipsum mollitia. Libero, assumenda?
+          <b>Key Features:</b><br></br>
+✅ Patient Management: Easily register, update, and track patient records with a centralized database.<br></br>
+✅ Doctor & Staff Dashboard: Manage doctor schedules, specializations, and availability in real time.<br></br>
+✅ Appointment Booking: Seamless online scheduling for patients with automated notifications.<br></br>
+✅ Billing & Invoicing: Secure and efficient billing system with digital invoice generation.<br></br>
+✅ Role-Based Access Control: Different access levels for admins, doctors, and patients to ensure data security.<br></br>
+✅ Medical Records & Reports: Secure storage and retrieval of patient history, prescriptions, and test results.<br></br>
+✅ User-Friendly Interface: Intuitive UI designed for seamless navigation and accessibility.<br></br>
           </p>
-          <p>Lorem ipsum dolor sit amet!</p>
           <p>Coding is fun!</p>
         </div>
       </div>

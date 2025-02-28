@@ -1,8 +1,13 @@
 .doctors-container {
   padding: 2rem;
-  max-width: 1400px;
-  margin: 0 auto;
+  max-width: 1700px;
+  margin-left: 130px;
+  background: #E5E5E5;
+  border-radius :60px;
 }
+
+
+
 
 .doctors-header {
   text-align: center;
@@ -16,7 +21,7 @@
 }
 
 .doctors-header p {
-  color: #7f8c8d;
+  color: #194043;
   font-size: 1.1rem;
 }
 

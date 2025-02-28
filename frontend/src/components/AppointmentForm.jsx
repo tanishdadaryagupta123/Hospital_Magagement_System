@@ -34,7 +34,7 @@ const AppointmentForm = () => {
   useEffect(() => {
     const fetchDoctors = async () => {
       const { data } = await axios.get(
-        "http://localhost:3000/api/v1/user/doctors",
+        "http://localhost:3000/api/v1/user/doctor/getall",
         { withCredentials: true }
       );
       setDoctors(data.doctors);
