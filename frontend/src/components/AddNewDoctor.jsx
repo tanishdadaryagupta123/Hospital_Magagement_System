@@ -14,7 +14,7 @@ const handleAddNewDoctor = async (e) => {
     formData.append('docAvatar', docAvatar); // Make sure docAvatar is a File object
 
     try {
-        const response = await fetch('http://localhost:3000/api/v1/user/doctor/addnew', {
+        const response = await fetch('https://hospital-magagement-system.onrender.com/api/v1/user/doctor/addnew', {
             method: 'POST',
             headers: {
                 'x-api-key': process.env.API_KEY,
