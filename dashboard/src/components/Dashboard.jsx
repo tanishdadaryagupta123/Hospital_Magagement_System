@@ -8,8 +8,10 @@ import { AiFillCloseCircle } from "react-icons/ai";
 
 const Dashboard = () => {
   const [appointments, setAppointments] = useState([]);
+  const [doctors, setDoctors] = useState([]);
   const { isAuthenticated, admin } = useContext(Context);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -17,39 +19,67 @@ const Dashboard = () => {
       return;
     }
 
-    const fetchAppointments = async () => {
+    const fetchData = async () => {
       try {
-        // Use a dummy data approach for now to avoid API issues
-        setAppointments([]);
-        setLoading(false);
+        setLoading(true);
+        setError(null);
         
-        // Uncomment this when the API is fixed
-        /*
-        const { data } = await axios.get(
-          "https://hospital-magagement-system.onrender.com/api/v1/appointment/getall",
-          { 
-            withCredentials: true,
-            headers: {
-              "Content-Type": "application/json"
+        // Fetch doctors count
+        try {
+          const doctorsResponse = await axios.get(
+            "https://hospital-magagement-system.onrender.com/api/v1/doctor/getall",
+            { 
+              withCredentials: true,
+              headers: {
+                "Content-Type": "application/json"
+              }
             }
+          );
+          
+          if (doctorsResponse.data && doctorsResponse.data.doctors) {
+            setDoctors(doctorsResponse.data.doctors);
           }
-        );
-        
-        if (data && data.appointments) {
-          setAppointments(data.appointments);
-        } else {
-          setAppointments([]);
+        } catch (doctorError) {
+          console.error("Error fetching doctors:", doctorError);
+          // Set a default count if API fails
+          setDoctors([]);
         }
-        */
+        
+        // Fetch appointments
+        try {
+          const appointmentsResponse = await axios.get(
+            "https://hospital-magagement-system.onrender.com/api/v1/appointment/getall",
+            { 
+              withCredentials: true,
+              headers: {
+                "Content-Type": "application/json"
+              }
+            }
+          );
+          
+          if (appointmentsResponse.data && appointmentsResponse.data.appointments) {
+            setAppointments(appointmentsResponse.data.appointments);
+          } else {
+            setAppointments([]);
+          }
+        } catch (appointmentError) {
+          console.error("Error fetching appointments:", appointmentError);
+          setAppointments([]);
+          
+          // Only set error if both API calls fail
+          if (doctors.length === 0) {
+            setError("Failed to load dashboard data. Please try again later.");
+          }
+        }
       } catch (error) {
-        console.error("Error fetching appointments:", error);
-        setAppointments([]);
+        console.error("Error fetching dashboard data:", error);
+        setError("Failed to load dashboard data. Please try again later.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchAppointments();
+    fetchData();
   }, [isAuthenticated]);
 
   const handleUpdateStatus = async (appointmentId, status) => {
@@ -104,7 +134,7 @@ const Dashboard = () => {
     return (
       <div className="loading-container">
         <div className="loading"></div>
-        <p>Loading appointments...</p>
+        <p>Loading dashboard data...</p>
       </div>
     );
   }
@@ -136,29 +166,32 @@ const Dashboard = () => {
           </div>
           <div className="thirdBox">
             <p>Registered Doctors</p>
-            <h3>10</h3>
+            <h3>{doctors ? doctors.length : 0}</h3>
           </div>
         </div>
         
         <div className="banner">
           <h5>Appointments</h5>
-          <div className="info-message" style={{ padding: "15px", margin: "15px 0", backgroundColor: "#f8f9fa", borderLeft: "4px solid #3498db", borderRadius: "4px" }}>
-            <p>The appointment data is temporarily unavailable. Please check back later.</p>
-          </div>
-          <table>
-            <thead>
-              <tr>
-                <th>Patient</th>
-                <th>Date</th>
-                <th>Doctor</th>
-                <th>Department</th>
-                <th>Status</th>
-                <th>Visited</th>
-              </tr>
-            </thead>
-            <tbody>
-              {appointments && appointments.length > 0 ? (
-                appointments.map((appointment) => (
+          
+          {error ? (
+            <div className="error-message">
+              <p>{error}</p>
+              <p>Please check your connection and try again.</p>
+            </div>
+          ) : appointments && appointments.length > 0 ? (
+            <table>
+              <thead>
+                <tr>
+                  <th>Patient</th>
+                  <th>Date</th>
+                  <th>Doctor</th>
+                  <th>Department</th>
+                  <th>Status</th>
+                  <th>Visited</th>
+                </tr>
+              </thead>
+              <tbody>
+                {appointments.map((appointment) => (
                   <tr key={appointment._id}>
                     <td>{`${appointment.firstName} ${appointment.lastName}`}</td>
                     <td>{appointment.appointment_date.substring(0, 16)}</td>
@@ -191,16 +224,15 @@ const Dashboard = () => {
                     </td>
                     <td>{appointment.hasVisited === true ? <GoCheckCircleFill className="green"/> : <AiFillCloseCircle className="red"/>}</td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="6" style={{ textAlign: "center" }}>
-                    No Appointments Found!
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <div className="no-data-message">
+              <h3>No Appointments Found!</h3>
+              <p>There are currently no appointments to display.</p>
+            </div>
+          )}
         </div>
       </section>
     </>

@@ -1,98 +1,152 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useLocation } from "react-router-dom";
+import { useLocation, Navigate } from "react-router-dom";
+import { Context } from "../main";
 import "./Doctors.css";
 
 const Doctors = () => {
   const [doctors, setDoctors] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const location = useLocation();
   const newDoctor = location.state?.newDoctor;
   const justAdded = location.state?.justAdded;
-
-  const fetchDoctors = async () => {
-    try {
-      const response = await axios.get(
-        "https://hospital-magagement-system.onrender.com/api/v1/user/doctor/getall",
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-            "x-api-key": "796358263762899"
-          }
-        }
-      );
-
-      if (response.data.success) {
-        setDoctors(response.data.doctors);
-      }
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Error fetching doctors");
-    }
-  };
+  const { isAuthenticated } = useContext(Context);
 
   useEffect(() => {
+    if (!isAuthenticated) {
+      setLoading(false);
+      return;
+    }
+
+    const fetchDoctors = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const response = await axios.get(
+          "https://hospital-magagement-system.onrender.com/api/v1/user/doctor/getall",
+          {
+            withCredentials: true,
+            headers: {
+              "Content-Type": "application/json"
+            }
+          }
+        );
+
+        if (response.data.success) {
+          setDoctors(response.data.doctors);
+        } else {
+          setDoctors([]);
+        }
+      } catch (error) {
+        console.error("Error fetching doctors:", error);
+        setError("Failed to load doctors. Please try again later.");
+        setDoctors([]);
+        
+        // Use dummy data if in development mode
+        if (process.env.NODE_ENV === 'development') {
+          setDoctors([
+            {
+              _id: "1",
+              firstName: "John",
+              lastName: "Smith",
+              email: "john.smith@example.com",
+              phone: "123-456-7890",
+              gender: "Male",
+              nic: "123456789",
+              doctorDepartment: "Cardiology",
+              docAvatar: { url: "/docHolder.jpg" }
+            },
+            {
+              _id: "2",
+              firstName: "Sarah",
+              lastName: "Johnson",
+              email: "sarah.johnson@example.com",
+              phone: "987-654-3210",
+              gender: "Female",
+              nic: "987654321",
+              doctorDepartment: "Neurology",
+              docAvatar: { url: "/docHolder.jpg" }
+            }
+          ]);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchDoctors();
     
     if (justAdded && newDoctor) {
       toast.success("New doctor added successfully!");
     }
-  }, [justAdded, newDoctor]);
+  }, [justAdded, newDoctor, isAuthenticated]);
+
+  if (!isAuthenticated) {
+    return <Navigate to={"/login"} />;
+  }
+
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <div className="loading"></div>
+        <p>Loading doctors...</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="doctors-container">
-      <div className="doctors-header">
-        <h2>Our Medical Specialists</h2>
-        <p>Meet our team of experienced healthcare professionals</p>
-      </div>
+    <section className="page doctors">
+      <h1>DOCTORS</h1>
       
-      <div className="doctors-grid">
-        {doctors.length > 0 ? (
-          doctors.map((doctor) => (
-            <div 
-              key={doctor._id} 
-              className={`doctor-card ${newDoctor?._id === doctor._id ? 'highlight-new' : ''}`}
-            >
-              <div className="doctor-card-header">
-                <div className="doctor-image">
-                  <img 
-                    src={doctor.docAvatar?.url || "/docHolder.jpg"} 
-                    alt={`${doctor.firstName} ${doctor.lastName}`} 
-                  />
+      {error ? (
+        <div className="error-message">
+          <p>{error}</p>
+          <p>Please check your connection and try again.</p>
+        </div>
+      ) : (
+        <div className="banner">
+          {doctors.length > 0 ? (
+            doctors.map((doctor) => (
+              <div 
+                key={doctor._id} 
+                className={`card ${newDoctor?._id === doctor._id ? 'highlight-new' : ''}`}
+              >
+                <img 
+                  src={doctor.docAvatar?.url || "/docHolder.jpg"} 
+                  alt={`${doctor.firstName} ${doctor.lastName}`} 
+                />
+                <h4>{`Dr. ${doctor.firstName} ${doctor.lastName}`}</h4>
+                <div className="details">
+                  <p>
+                    Department: <span>{doctor.doctorDepartment}</span>
+                  </p>
+                  <p>
+                    Email: <span>{doctor.email}</span>
+                  </p>
+                  <p>
+                    Phone: <span>{doctor.phone}</span>
+                  </p>
+                  <p>
+                    Gender: <span>{doctor.gender}</span>
+                  </p>
+                  <p>
+                    NIC: <span>{doctor.nic}</span>
+                  </p>
                 </div>
-                <h3>{`Dr. ${doctor.firstName} ${doctor.lastName}`}</h3>
-                <span className="department">{doctor.doctorDepartment}</span>
               </div>
-              
-              <div className="doctor-card-body">
-                <div className="info-item">
-                  <i className="fas fa-envelope"></i>
-                  <span>{doctor.email}</span>
-                </div>
-                <div className="info-item">
-                  <i className="fas fa-phone"></i>
-                  <span>{doctor.phone}</span>
-                </div>
-                <div className="info-item">
-                  <i className="fas fa-venus-mars"></i>
-                  <span>{doctor.gender}</span>
-                </div>
-                <div className="info-item">
-                  <i className="fas fa-id-card"></i>
-                  <span>{doctor.nic}</span>
-                </div>
-              </div>
+            ))
+          ) : (
+            <div className="no-data-message">
+              <h3>No Doctors Found!</h3>
+              <p>There are currently no registered doctors.</p>
             </div>
-          ))
-        ) : (
-          <div className="no-doctors">
-            <i className="fas fa-user-md"></i>
-            <h3>No Doctors Found</h3>
-            <p>There are no registered doctors at the moment.</p>
-          </div>
-        )}
-      </div>
-    </div>
+          )}
+        </div>
+      )}
+    </section>
   );
 };
 
