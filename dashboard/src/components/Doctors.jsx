@@ -79,9 +79,9 @@ const Doctors = () => {
         
         // The following code is commented out until the API endpoints are fixed
         /*
-        const response = await axios.get(
+        const doctorsResponse = await axios.get(
           "https://hospital-magagement-system.onrender.com/api/v1/user/doctor/getall",
-          {
+          { 
             withCredentials: true,
             headers: {
               "Content-Type": "application/json"
@@ -89,8 +89,8 @@ const Doctors = () => {
           }
         );
 
-        if (response.data.success) {
-          setDoctors(response.data.doctors);
+        if (doctorsResponse.data.success) {
+          setDoctors(doctorsResponse.data.doctors);
         } else {
           setDoctors(sampleDoctors);
         }
