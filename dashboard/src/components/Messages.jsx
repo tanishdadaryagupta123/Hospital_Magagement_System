@@ -69,8 +69,8 @@ import { Navigate } from "react-router-dom";
           );
           setMessages(data.messages);
         } catch (error) {
-          console.log(error.response.data.message);
-          setError("Failed to load messages.");
+          console.error("Error fetching messages:", error.response ? error.response.data : error);
+          setError(error.response ? error.response.data.message : "Failed to load messages.");
         } finally {
           setLoading(false);
         }
