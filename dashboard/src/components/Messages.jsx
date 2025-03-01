@@ -64,7 +64,7 @@ import { Navigate } from "react-router-dom";
         try {
           setLoading(true);
           const { data } = await axios.get(
-            "https://hospital-magagement-system.onrender.com/api/v1/message/getall",
+            "hospital-magagement-system-qxwr-de5uvmtvq.vercel.app/api/v1/message/getall",
             { withCredentials: true }
           );
           setMessages(data.messages);
