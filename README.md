@@ -2,7 +2,7 @@
 DashBoard Admin Panal 
 
 HOME APPOINTMENT :-
-![image](https://github.com/user-attachments/assets/b18dfd36-34d9-45f8-9326-a982f7dbd1c7)
+![image](https://github.com/user-attachments/assets/f5a269cf-6343-455b-be6f-578ff16895e8)
 
 ADD NEW ADMIN :- 
 ![image](https://github.com/user-attachments/assets/5fe8f36a-3cfc-4f91-a339-8b473ef0177d)
